@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickClip | Pro Meme Suite</title>
+    <title>QuickClip | Pro MP4 to GIF Meme Suite</title>
+    
+    <!-- SEO & Verification -->
+    <meta name="description" content="QuickClip: The ultimate browser-based MP4 to GIF converter. Create high-quality memes with custom captions, automatic text wrapping, and professional aspect ratios. No upload required, 100% private.">
+    <meta name="keywords" content="MP4 to GIF, Meme Maker, Video to GIF, Online Video Editor, QuickClip, Meme Generator, No Watermark GIF">
+    <meta name="google-site-verification" content="SDGgUgx5dlJDhtnZUH2wAg0hsZcXITOfbFBIQUOYFPU" />
+    
+    <!-- Tab Logo (Favicon) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%232563eb'/><path d='M35 30 L75 50 L35 70 Z' fill='white'/></svg>">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
     <style>
@@ -25,7 +34,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
         }
 
-        /* High-End Animations */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -43,21 +51,19 @@
             align-items: center;
             justify-content: center;
             padding: 60px 20px;
-            background: #020617;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
             min-height: 80vh;
         }
 
         canvas { 
-            max-width: 900px; 
-            max-height: 600px;
-            width: 100%;
-            height: auto;
+            max-width: 100%;
+            height: auto !important;
             background: #000;
-            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
             border-radius: 24px;
             cursor: crosshair;
             touch-action: none; 
-            border: 4px solid #1e293b;
+            border: 1px solid #334155;
         }
 
         .btn-action {
@@ -73,6 +79,19 @@
         .btn-action:hover:not(:disabled) {
             transform: translateY(-2px);
             filter: brightness(1.1);
+        }
+
+        .ratio-btn {
+            background: #1e293b;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            color: #94a3b8;
+        }
+
+        .ratio-btn.active {
+            border-color: #3b82f6;
+            background: #1e3a8a;
+            color: white;
         }
 
         .card-info {
@@ -109,8 +128,10 @@
     <!-- Nav -->
     <nav class="fixed top-0 w-full z-[100] glass-dark px-8 py-4 flex justify-between items-center">
         <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-900/20">Q</div>
-            <h1 class="text-xl font-black tracking-tight text-white">QuickClip</h1>
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black shadow-lg shadow-blue-900/20">
+                <svg class="w-6 h-6" viewBox="0 0 100 100"><path d="M35 30 L75 50 L35 70 Z" fill="white"/></svg>
+            </div>
+            <h1 class="text-xl font-black tracking-tight text-white italic">QuickClip<span class="text-blue-500">PRO</span></h1>
         </div>
         
         <div class="hidden lg:flex gap-8 text-[11px] font-bold uppercase tracking-[0.1em] text-slate-400">
@@ -121,7 +142,7 @@
         </div>
         
         <button id="export-btn" disabled class="btn-action bg-blue-600 text-white disabled:opacity-30 disabled:cursor-not-allowed">
-            <span>Export</span>
+            <span>Export GIF</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
         </button>
     </nav>
@@ -145,21 +166,19 @@
             <!-- Editor Controls -->
             <div class="mt-12 w-full max-w-4xl space-y-8 px-4">
                 <div class="flex flex-wrap items-center justify-center gap-6">
-                    <button id="add-text-btn" class="btn-action bg-white text-slate-900 px-10 py-5 text-lg hover:bg-blue-50">
-                        + New Caption
+                    <button id="add-text-btn" class="btn-action bg-white text-slate-900 px-10 py-5 text-lg hover:bg-blue-50 shadow-xl">
+                        + Add Caption Layer
                     </button>
                     
-                    <div id="text-editor" class="hidden flex flex-wrap items-center gap-4 bg-slate-800 p-3 rounded-2xl border border-slate-700 shadow-xl animate-in fade-in zoom-in duration-300">
-                        <input type="text" id="edit-text-val" class="bg-slate-900 text-white px-5 py-3 text-sm w-64 rounded-xl outline-none border border-slate-700 focus:border-blue-500 transition-colors" placeholder="Write something cool...">
+                    <div id="text-editor" class="hidden flex flex-wrap items-center gap-4 bg-slate-800 p-3 rounded-2xl border border-slate-700 shadow-2xl animate-in fade-in zoom-in duration-300">
+                        <input type="text" id="edit-text-val" class="bg-slate-900 text-white px-5 py-3 text-sm w-64 rounded-xl outline-none border border-slate-700 focus:border-blue-500 transition-colors" placeholder="Enter text...">
                         
-                        <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-xl border border-slate-700">
-                            <select id="edit-text-font" class="bg-transparent text-white px-3 py-2 text-xs font-bold outline-none cursor-pointer">
-                                <option value="Inter">Classic</option>
-                                <option value="Bebas Neue">Meme Style</option>
-                                <option value="Playfair Display">Elegant</option>
-                                <option value="Space Mono">Modern</option>
-                            </select>
-                        </div>
+                        <select id="edit-text-font" class="bg-slate-900 text-white px-3 py-2 text-xs font-bold rounded-xl border border-slate-700 outline-none cursor-pointer">
+                            <option value="Inter">Classic Sans</option>
+                            <option value="Bebas Neue">Meme Style</option>
+                            <option value="Playfair Display">Elegant</option>
+                            <option value="Space Mono">Modern</option>
+                        </select>
 
                         <input type="color" id="edit-text-color" class="w-10 h-10 rounded-xl cursor-pointer bg-transparent border-none">
                         
@@ -171,12 +190,25 @@
                     </div>
                 </div>
 
-                <div class="bg-slate-800 p-8 rounded-[32px] border border-slate-700 shadow-lg flex flex-col gap-6">
-                    <div class="flex justify-between items-center text-xs font-black text-slate-400 uppercase tracking-widest">
-                        <span>Top Margin (Header)</span>
-                        <span id="header-val" class="text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">100px</span>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Ratio Resizer -->
+                    <div class="bg-slate-800 p-8 rounded-[32px] border border-slate-700 shadow-lg flex flex-col gap-6">
+                        <div class="text-xs font-black text-slate-500 uppercase tracking-widest">Aspect Ratio</div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="ratio-btn py-3 rounded-xl text-[10px] font-black uppercase active" data-ratio="16/9">16:9 Wide</button>
+                            <button class="ratio-btn py-3 rounded-xl text-[10px] font-black uppercase" data-ratio="1/1">1:1 Square</button>
+                            <button class="ratio-btn py-3 rounded-xl text-[10px] font-black uppercase" data-ratio="9/16">9:16 Port</button>
+                        </div>
                     </div>
-                    <input type="range" id="header-height-input" min="0" max="500" value="100" class="w-full">
+
+                    <!-- Margin Adjuster -->
+                    <div class="bg-slate-800 p-8 rounded-[32px] border border-slate-700 shadow-lg flex flex-col gap-6">
+                        <div class="flex justify-between items-center text-xs font-black text-slate-500 uppercase tracking-widest">
+                            <span>Top Margin (White Bar)</span>
+                            <span id="header-val" class="text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">100px</span>
+                        </div>
+                        <input type="range" id="header-height-input" min="0" max="500" value="100" class="w-full">
+                    </div>
                 </div>
             </div>
         </div>
@@ -200,7 +232,7 @@
                                     <input type="checkbox" id="fade-opt" class="sr-only peer">
                                     <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:left-5 peer-checked:bg-blue-400"></div>
                                 </div>
-                                <span class="group-hover:text-white transition-colors">Fade FX</span>
+                                <span class="group-hover:text-white transition-colors">Auto Fade</span>
                             </label>
                             <span id="time-total" class="font-mono">00:00</span>
                         </div>
@@ -209,12 +241,12 @@
 
                 <div class="bg-slate-800 p-6 rounded-3xl border border-slate-700 flex items-center gap-6 shadow-inner">
                     <div class="text-center">
-                        <p class="text-[10px] font-black text-slate-500 mb-2 uppercase tracking-tighter">Start Time</p>
+                        <p class="text-[10px] font-black text-slate-500 mb-2 uppercase tracking-tighter">Start (s)</p>
                         <input type="number" id="trim-start" step="0.1" value="0" class="w-20 bg-slate-900 border border-slate-700 rounded-xl py-2 text-center font-bold text-white outline-none focus:border-blue-500">
                     </div>
                     <div class="w-6 h-px bg-slate-700"></div>
                     <div class="text-center">
-                        <p class="text-[10px] font-black text-slate-500 mb-2 uppercase tracking-tighter">End Time</p>
+                        <p class="text-[10px] font-black text-slate-500 mb-2 uppercase tracking-tighter">End (s)</p>
                         <input type="number" id="trim-end" step="0.1" value="5" class="w-20 bg-slate-900 border border-slate-700 rounded-xl py-2 text-center font-bold text-white outline-none focus:border-blue-500">
                     </div>
                 </div>
@@ -224,22 +256,22 @@
 
     <!-- Info Sections -->
     <section id="how-to-use" class="max-w-6xl mx-auto px-8 py-32 reveal">
-        <h2 class="text-5xl font-black mb-16 tracking-tighter text-white">The Workflow</h2>
+        <h2 class="text-5xl font-black mb-16 tracking-tighter text-white">The MP4 to GIF Workflow</h2>
         <div class="grid md:grid-cols-3 gap-10">
             <div class="card-info hover:border-blue-500/30 transition-colors">
                 <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center font-black text-xl mb-8 border border-blue-500/20">1</div>
-                <h3 class="text-2xl font-bold mb-4 text-white">Import</h3>
-                <p class="text-slate-400 leading-relaxed">Select any video or image. We process everything locally in your browser for maximum speed and privacy.</p>
+                <h3 class="text-2xl font-bold mb-4 text-white">Import MP4</h3>
+                <p class="text-slate-400 leading-relaxed">Select any video or image. We process everything locally in your browser for maximum speed and privacy—no cloud uploads ever.</p>
             </div>
             <div class="card-info hover:border-blue-500/30 transition-colors">
                 <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center font-black text-xl mb-8 border border-blue-500/20">2</div>
-                <h3 class="text-2xl font-bold mb-4 text-white">Design</h3>
-                <p class="text-slate-400 leading-relaxed">Add captions with professional fonts. Drag them around, resize, and use the top padding for that classic "meme" look.</p>
+                <h3 class="text-2xl font-bold mb-4 text-white">Auto-Fit Layout</h3>
+                <p class="text-slate-400 leading-relaxed">Add captions that wrap automatically. Adjust the top margin to create borders that perfectly fit your meme style.</p>
             </div>
             <div class="card-info hover:border-blue-500/30 transition-colors">
                 <div class="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center font-black text-xl mb-8 border border-blue-500/20">3</div>
-                <h3 class="text-2xl font-bold mb-4 text-white">Render</h3>
-                <p class="text-slate-400 leading-relaxed">Clip the duration and export to high-quality GIF. Perfect for Discord, Twitter, or Group Chats.</p>
+                <h3 class="text-2xl font-bold mb-4 text-white">Quick Export</h3>
+                <p class="text-slate-400 leading-relaxed">Export to high-quality GIF with custom aspect ratios. Perfect for Discord, Twitter, and professional social marketing.</p>
             </div>
         </div>
     </section>
@@ -249,38 +281,30 @@
         <div class="space-y-6">
             <details class="card-info cursor-pointer group p-8 bg-slate-800/50">
                 <summary class="list-none text-xl font-bold flex justify-between items-center text-white">
-                    Why isn't my video loading?
+                    How does the MP4 to GIF converter work?
                     <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs group-open:rotate-180 transition-transform">▼</div>
                 </summary>
-                <p class="mt-6 text-slate-400 leading-relaxed">Ensure your file is in .mp4 format. Some high-bitrate 4K files may be heavy for your browser memory—try to keep clips under 30 seconds for best performance.</p>
+                <p class="mt-6 text-slate-400 leading-relaxed">QuickClip reads your video frames directly from your browser's hardware memory, applies your text layers, and uses the GIF.js engine to assemble them into a compressed file.</p>
             </details>
             <details class="card-info cursor-pointer group p-8 bg-slate-800/50">
                 <summary class="list-none text-xl font-bold flex justify-between items-center text-white">
-                    Is my data private?
+                    Is my content private?
                     <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs group-open:rotate-180 transition-transform">▼</div>
                 </summary>
-                <p class="mt-6 text-slate-400 leading-relaxed">100%. QuickClip never uploads your files to a server. All the rendering happens right on your computer.</p>
-            </details>
-            <details class="card-info cursor-pointer group p-8 bg-slate-800/50">
-                <summary class="list-none text-xl font-bold flex justify-between items-center text-white">
-                    Can I make multi-line captions?
-                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs group-open:rotate-180 transition-transform">▼</div>
-                </summary>
-                <p class="mt-6 text-slate-400 leading-relaxed">Yes! The tool automatically wraps text if it gets too long, and you can add as many individual caption layers as you need.</p>
+                <p class="mt-6 text-slate-400 leading-relaxed">Yes. All processing happens on your device. We do not have servers that store your video or exported images.</p>
             </details>
         </div>
     </section>
 
     <section id="tos" class="max-w-4xl mx-auto px-8 py-32 reveal">
-        <h2 class="text-3xl font-black mb-12 tracking-tight text-white">Terms of Service</h2>
+        <h2 class="text-3xl font-black mb-12 tracking-tight text-white">Terms & Legal</h2>
         <div class="card-info text-slate-400 text-sm leading-relaxed border-slate-800">
-            <p class="mb-4">QuickClip is provided as a creative tool for self-expression. By using this service, you agree not to create content that is harmful, illegal, or violates the rights of others. We promote a healthy, respectful creator community.</p>
-            <p>We do not collect or monitor your creations. Use responsibly.</p>
+            <p class="mb-4">QuickClip Pro is provided as a browser-based utility. Users are responsible for ensuring they have the rights to the media they convert. We do not log usage data or creations.</p>
         </div>
     </section>
 
     <footer class="py-20 text-center border-t border-slate-800/50 text-slate-500 font-bold text-xs uppercase tracking-widest">
-        Made by chknz 2026 &bull; QuickClip Pro Meme Editor
+        Made by chknz 2026 &bull; QuickClip Pro Meme Editor &bull; google-site-verification: google281533e354dec710.html
     </footer>
 
     <input type="file" id="file-input" class="hidden" accept="video/*,image/*">
@@ -291,14 +315,14 @@
             <h2 class="text-3xl font-black text-white mb-10 tracking-tight">Export Successful</h2>
             <img id="final-result" src="" class="max-h-[50vh] mx-auto object-contain rounded-3xl shadow-2xl mb-10 border border-slate-700">
             <div class="flex gap-4">
-                <button id="download-trigger" class="flex-grow btn-action bg-blue-600 text-white py-5 text-lg">Download GIF</button>
+                <button id="download-trigger" class="flex-grow btn-action bg-blue-600 text-white py-5 text-lg">Save GIF</button>
                 <button onclick="closeModal()" class="px-10 btn-action bg-slate-800 text-white hover:bg-slate-700">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Intersection Observer for Reveal Anims
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if(entry.isIntersecting) entry.target.classList.add('active');
@@ -314,6 +338,8 @@
             video.loop = true;
 
             let headerHeight = 100;
+            let canvasWidth = 1280;
+            let canvasHeight = 720;
             let mediaLayer = { x: 0, y: 100, w: 1280, h: 620, type: 'media', aspect: 1, source: null };
             let textLayers = [];
             let selectedLayer = null;
@@ -322,16 +348,48 @@
             let isDragging = false;
             let startX, startY;
 
-            canvas.width = 1280;
-            canvas.height = 720;
+            function updateCanvasSize(ratioStr) {
+                const [w, h] = ratioStr.split('/').map(Number);
+                const base = 1080;
+                canvasWidth = base;
+                canvasHeight = Math.round(base * (h / w));
+                canvas.width = canvasWidth;
+                canvas.height = canvasHeight;
+                fitMedia();
+            }
+            updateCanvasSize('16/9');
+
+            function fitMedia() {
+                if (!mediaLayer.source) return;
+                const availableH = canvasHeight - headerHeight;
+                const mediaAspect = mediaLayer.source.videoWidth / mediaLayer.source.videoHeight || mediaLayer.source.width / mediaLayer.source.height;
+                
+                if (mediaAspect > (canvasWidth / availableH)) {
+                    mediaLayer.w = canvasWidth;
+                    mediaLayer.h = canvasWidth / mediaAspect;
+                } else {
+                    mediaLayer.h = availableH;
+                    mediaLayer.w = availableH * mediaAspect;
+                }
+                mediaLayer.x = (canvasWidth - mediaLayer.w) / 2;
+                mediaLayer.y = headerHeight + (availableH - mediaLayer.h) / 2;
+                mediaLayer.aspect = mediaAspect;
+            }
 
             document.getElementById('file-input').onchange = e => handleFile(e.target.files[0]);
             document.getElementById('header-height-input').oninput = e => {
                 headerHeight = parseInt(e.target.value);
                 document.getElementById('header-val').innerText = headerHeight + 'px';
-                mediaLayer.y = headerHeight;
-                mediaLayer.h = canvas.height - headerHeight;
+                fitMedia();
             };
+
+            document.querySelectorAll('.ratio-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    updateCanvasSize(btn.dataset.ratio);
+                };
+            });
 
             function handleFile(file) {
                 if (!file) return;
@@ -340,10 +398,7 @@
                     video.src = url;
                     video.onloadedmetadata = () => {
                         mediaLayer.source = video;
-                        mediaLayer.aspect = video.videoWidth / video.videoHeight;
-                        mediaLayer.h = canvas.height - headerHeight;
-                        mediaLayer.w = mediaLayer.h * mediaLayer.aspect;
-                        mediaLayer.x = (canvas.width - mediaLayer.w) / 2;
+                        fitMedia();
                         document.getElementById('trim-end').value = Math.min(video.duration, 5).toFixed(1);
                         document.getElementById('time-total').innerText = formatTime(video.duration);
                         document.getElementById('timeline-ui').classList.remove('hidden');
@@ -354,10 +409,7 @@
                     const img = new Image();
                     img.onload = () => {
                         mediaLayer.source = img;
-                        mediaLayer.aspect = img.width / img.height;
-                        mediaLayer.h = canvas.height - headerHeight;
-                        mediaLayer.w = mediaLayer.h * mediaLayer.aspect;
-                        mediaLayer.x = (canvas.width - mediaLayer.w) / 2;
+                        fitMedia();
                         document.getElementById('upload-overlay').classList.add('hidden');
                         document.getElementById('export-btn').disabled = false;
                         document.getElementById('timeline-ui').classList.add('hidden');
@@ -382,11 +434,8 @@
                     const h = getHandles(layer);
                     for (let key in h) {
                         if (Math.hypot(pos.x - h[key].x, pos.y - h[key].y) < 30) {
-                            resizeHandle = key;
-                            dragTarget = layer;
-                            selectedLayer = layer;
-                            updateEditorUI();
-                            return;
+                            resizeHandle = key; dragTarget = layer; selectedLayer = layer;
+                            updateEditorUI(); return;
                         }
                     }
                 }
@@ -394,11 +443,8 @@
                 for (let i = layers.length - 1; i >= 0; i--) {
                     const l = layers[i];
                     if (pos.x >= l.x && pos.x <= l.x + l.w && pos.y >= l.y && pos.y <= l.y + l.h) {
-                        dragTarget = l;
-                        selectedLayer = l;
-                        isDragging = true;
-                        updateEditorUI();
-                        return;
+                        dragTarget = l; selectedLayer = l; isDragging = true;
+                        updateEditorUI(); return;
                     }
                 }
                 selectedLayer = null; updateEditorUI();
@@ -412,17 +458,14 @@
                         dragTarget.w = Math.max(100, pos.x - dragTarget.x);
                         if (dragTarget.type === 'media') dragTarget.h = dragTarget.w / dragTarget.aspect;
                         else {
-                            // Scale text size roughly with box height for intuitive resizing
                             dragTarget.h = Math.max(50, pos.y - dragTarget.y);
                             if (dragTarget.type === 'text') dragTarget.size = dragTarget.h * 0.8;
                         }
                     } else if (resizeHandle === 'tl') {
                         const dw = dragTarget.x - pos.x;
                         const dh = dragTarget.y - pos.y;
-                        dragTarget.x = pos.x;
-                        dragTarget.y = pos.y;
-                        dragTarget.w += dw;
-                        dragTarget.h += dh;
+                        dragTarget.x = pos.x; dragTarget.y = pos.y;
+                        dragTarget.w += dw; dragTarget.h += dh;
                     }
                 } else if (isDragging) {
                     dragTarget.x += (pos.x - startX);
@@ -442,18 +485,13 @@
             }
 
             function getHandles(l) {
-                return {
-                    tl: { x: l.x, y: l.y },
-                    br: { x: l.x + l.w, y: l.y + l.h }
-                };
+                return { tl: { x: l.x, y: l.y }, br: { x: l.x + l.w, y: l.y + l.h } };
             }
 
-            // Text Wrapping Engine
             function wrapText(ctx, text, maxWidth) {
                 let words = text.split(' ');
                 let lines = [];
                 let currentLine = words[0];
-
                 for (let i = 1; i < words.length; i++) {
                     let word = words[i];
                     let width = ctx.measureText(currentLine + " " + word).width;
@@ -492,23 +530,17 @@
                         if (relativePos < 0.5) alpha = relativePos / 0.5;
                         if (relativePos > totalDur - 0.5) alpha = (totalDur - relativePos) / 0.5;
                     }
-                    
                     ctxTarget.save();
                     ctxTarget.globalAlpha = Math.max(0, Math.min(1, alpha));
                     ctxTarget.fillStyle = l.color;
                     ctxTarget.font = `900 ${l.size}px ${l.font}`;
                     ctxTarget.textBaseline = 'top';
                     ctxTarget.textAlign = 'center';
-                    
-                    // Use wrapText to prevent overflow
                     const lines = wrapText(ctxTarget, l.text, l.w - 20);
                     const lineHeight = l.size * 1.1;
-                    
                     lines.forEach((line, i) => {
                         ctxTarget.fillText(line, l.x + l.w/2, l.y + (i * lineHeight));
                     });
-                    
-                    // Update bounds for hit detection
                     l.h = lines.length * lineHeight;
                     ctxTarget.restore();
                 });
@@ -517,8 +549,7 @@
             function draw() {
                 renderFrame(ctx, true, video.currentTime);
                 if (selectedLayer) {
-                    ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 4;
-                    ctx.setLineDash([8, 4]);
+                    ctx.strokeStyle = "#3b82f6"; ctx.lineWidth = 4; ctx.setLineDash([8, 4]);
                     ctx.strokeRect(selectedLayer.x, selectedLayer.y, selectedLayer.w, selectedLayer.h);
                     ctx.setLineDash([]);
                     const h = getHandles(selectedLayer);
@@ -529,8 +560,7 @@
                     }
                 }
                 if (video.src && !video.paused) {
-                    const p = (video.currentTime / video.duration) * 100;
-                    document.getElementById('seek-bar').value = p;
+                    document.getElementById('seek-bar').value = (video.currentTime / video.duration) * 100;
                     document.getElementById('time-current').innerText = formatTime(video.currentTime);
                 }
                 requestAnimationFrame(draw);
@@ -538,7 +568,7 @@
             draw();
 
             document.getElementById('add-text-btn').onclick = () => {
-                const newT = { type: 'text', text: 'WRITE CAPTION', x: canvas.width/2 - 300, y: 20, w: 600, h: 80, color: '#000000', size: 60, font: 'Inter' };
+                const newT = { type: 'text', text: 'NEW CAPTION', x: canvasWidth/2 - 300, y: 20, w: 600, h: 80, color: '#000000', size: 60, font: 'Inter' };
                 textLayers.push(newT); selectedLayer = newT; updateEditorUI();
             };
 
@@ -552,7 +582,7 @@
                 } else editor.classList.add('hidden');
             }
 
-            document.getElementById('edit-text-val').oninput = e => { if (selectedLayer) selectedLayer.text = e.target.value; };
+            document.getElementById('edit-text-val').oninput = e => { if (selectedLayer) selectedLayer.text = e.target.value.toUpperCase(); };
             document.getElementById('edit-text-color').oninput = e => { if (selectedLayer) selectedLayer.color = e.target.value; };
             document.getElementById('edit-text-font').onchange = e => { if (selectedLayer) selectedLayer.font = e.target.value; };
             document.getElementById('delete-text-btn').onclick = () => { textLayers = textLayers.filter(l => l !== selectedLayer); selectedLayer = null; updateEditorUI(); };
@@ -601,7 +631,7 @@
                     gif.addFrame(canvas, {delay: 500});
                 }
 
-                btn.innerText = "Assembling GIF...";
+                btn.innerText = "Finalizing GIF...";
                 gif.on('finished', blob => {
                     document.getElementById('final-result').src = URL.createObjectURL(blob);
                     document.getElementById('result-modal').classList.remove('hidden');
